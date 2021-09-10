@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>图形封装</title>
+    <link rel="icon" href="https://img.kaikeba.com/kkb_portal_icon.ico">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #canvas {
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script id="vertexShader" type="x-shader/x-vertex">
+        attribute vec4 a_Position;
+        void main() {
+            gl_Position = a_Position;
+            gl_PointSize = 50.0;
+        }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        void main() {
+            gl_FragColor=vec4(1,1,0,1);
+        }
+    </script>
+    <script type="module">
+        import { initShaders } from "../jsm/Utils.js";
+        const canvas = document.querySelector("#canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // 获取着色器文本
+        const vsSource = document.querySelector("#vertexShader").innerText;
+        const fsSource = document.querySelector("#fragmentShader").innerText;
+
+        //三维画笔
+        const gl = canvas.getContext("webgl");
+
+        //初始化着色器
+        initShaders(gl, vsSource, fsSource);
+
+        const vertices = [0, 0.2];
+        const vertexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+        const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+        gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+        gl.enableVertexAttribArray(a_Position)
+        //声明颜色 rgba
+        gl.clearColor(0, 0, 0, 1);
+        //刷底色
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+
+        gl.drawArrays(gl.POINTS, 0, 1)
+        // gl.drawArrays(gl.LINES, 0, 2)
+        //设置attribute 变量
+        // a_Position=vec4(1,0,0,1)
+
+        // 1s之后再画一个点
+        setTimeout(() => {
+            vertices.push(-0.3, -0.1);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+            // 刷底色
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.drawArrays(gl.POINTS, 0, 2)
+        }, 1000)
+        setTimeout(() => {
+            vertices.push(-0., -0.2, 0.2, 0.4, 0.3, 0.5);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+            gl.clear(gl.COLOR_BUFFER_BIT); 
+            // console.log(vertices)  [0, 0.2, -0.2, -0.1, -0.2, -0.1]
+            gl.drawArrays(gl.POINTS, 0, 2);
+            gl.drawArrays(gl.LINES, 0, 2)
+        }, 2000)
+    </script>
+</body>
+
+</html>

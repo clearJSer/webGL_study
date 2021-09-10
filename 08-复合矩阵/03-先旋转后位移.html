@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>位移加位移</title>
+    <link rel="icon" href="https://img.kaikeba.com/kkb_portal_icon.ico">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #canvas {
+            width: 800px;
+            height: 800px;
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script id="vertexShader" type="x-shader/x-vertex">
+       attribute vec4 a_Position;
+    uniform mat4 u_Matrix;
+    void main(){
+      gl_Position = u_Matrix * a_Position;
+    }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        void main() {
+            gl_FragColor=vec4(1,1,0,1);
+        }
+    </script>
+    <script type="module">
+        import { Matrix4 } from 'https://unpkg.com/three/build/three.module.js';
+        import { initShaders } from "../jsm/Utils.js";
+        const canvas = document.querySelector("#canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // 获取着色器文本
+        const vsSource = document.querySelector("#vertexShader").innerText;
+        const fsSource = document.querySelector("#fragmentShader").innerText;
+
+        //三维画笔
+        const gl = canvas.getContext("webgl");
+
+        //初始化着色器
+        initShaders(gl, vsSource, fsSource);
+
+        // 向attribute变量中写入多点
+        // 顶点数据
+        const vertices = new Float32Array([0, 0.2, -0.2, -0.1, 0.2, -0.1, 0.4, 0.2]);
+        // 缓冲对象
+        const vertexBuffer = gl.createBuffer();
+        // 绑定缓冲对象
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        // 写入数据
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+        // 获取attribute 变量
+        const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+        // 修改attribute 变量
+        gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+        // 赋能批处理
+        gl.enableVertexAttribArray(a_Position);
+
+        gl.clearColor(0, 0, 0, 1);
+        //刷底色
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        const u_Matrix = gl.getUniformLocation(gl.program, 'u_Matrix');
+        const [bx, by] = [0.1, 0.2];
+        const [cx, cy] = [0.1, 0.4];
+        const mr = new Matrix4();
+        mr.makeRotationZ(Math.PI / 3);
+
+        const mt = new Matrix4();
+        mt.makeTranslation(0.3, 0.4, 0);
+
+        const dm = mt.multiply(mr);
+        console.log(dm.elements)
+        gl.uniformMatrix4fv(u_Matrix, false, dm.elements);
+        //声明颜色 rgba
+        gl.clearColor(0, 0, 0, 1);
+        //刷底色
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        //设置attribute 变量
+        // a_Position=vec4(1,0,0,1)
+        // const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+
+        //修改attribute 变量
+        // gl.vertexAttrib3f(a_Position, 0.5, 0.5, 0);
+        // gl.vertexAttrib2f(a_Position, 0.5, 0.5);
+        // gl.vertexAttrib1f(a_Position, 0.1);
+
+        //绘制顶点
+        // gl.drawArrays(gl.TRIANGLES, 0, 3); // 绘制三角形
+        // gl.drawArrays(gl.LINE_STRIP, 0, 3); // 绘制线段
+        gl.drawArrays(gl.TRIANGLES, 0, 3); // 绘制闭环的效果
+        // const m = new Matrix4();
+        // let angle = 0;
+        // !(function ani() {
+        //     angle += 0.01;
+        //     m.makeRotationZ(angle)
+        //     gl.clear(gl.COLOR_BUFFER_BIT);
+        //     gl.uniformMatrix4fv(u_Matrix, false, m.elements);
+        //     gl.drawArrays(gl.TRIANGLES, 0, 3)
+        //     requestAnimationFrame(ani)
+        // })()
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden;
+        }
+        /* #webgl {
+            background: red;
+        } */
+    </style>
+</head>
+<body>
+    <canvas id="webgl"></canvas>
+</body>
+<script>
+const canvas = document.querySelector('#webgl');
+canvas.width = 500;
+canvas.height = 600;
+const gl = canvas.getContext('webgl');
+// r g b a
+gl.clearColor(1,1,0,1)  
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+//css颜色
+const rgbaCss = 'rgba(255, 100, 0, 1)';
+const reg = RegExp(/\((.*)\)/);
+const rgbaStr = reg.exec(rgbaCss)[1];
+console.log(rgbaStr)
+
+const rgba = rgbaStr.split(",").map((n) => parseInt(n))
+console.log(rgba)
+const r = rgba[0] / 255;
+const g = rgba[1] / 255;
+const b = rgba[2] / 255;
+const a = rgba[3];
+
+gl.clearColor(r, g, b, a);
+gl.clear(gl.COLOR_BUFFER_BIT)
+</script>
+</html>
