@@ -1,12 +1,10 @@
 ## 项目背景
 可视化避不开3D领域，为了更好的学习webGL，在开课吧报了一个课程 《高薪WebGL工程师》
 https://www.kaikeba.com/course/vip/255?channelCode=plat9iuq4vs8nq
-花费了2200RMB 😭
+花费了2200RMB 😭  
 好在课程不错，非常体系，老师讲的也不错
 讲师的博客： http://yxyy.name/blog/
- ---- 2021年9月10
-
-
+---- 2021年9月10
 
 
  #### 学习心得
@@ -17,7 +15,8 @@ https://www.kaikeba.com/course/vip/255?channelCode=plat9iuq4vs8nq
  
 
 
-
-
+### Q&A 
+ - 裁剪空间是什么？裁剪了什么？
+ - 08-08 视图矩阵 求c向量  为什么要转成右手坐标系，原来的webgl是什么坐标系
  #### 其他
   如果有疑问可以跟我联系，或者想看课程的朋友
