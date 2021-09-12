@@ -20,3 +20,6 @@ https://www.kaikeba.com/course/vip/255?channelCode=plat9iuq4vs8nq
  - 08-08 视图矩阵 求c向量  为什么要转成右手坐标系，原来的webgl是什么坐标系
  #### 其他
   如果有疑问可以跟我联系，或者想看课程的朋友
+
+  ### 重点内容 反复看
+  - 09-数据合一  记住关于类目数量  顶点数量等名称  

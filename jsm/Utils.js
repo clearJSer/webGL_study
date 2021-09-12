@@ -66,4 +66,10 @@ function ScaleLinear(ax, ay, bx, by) {
     return k * x + b;
   };
 }
-export { initShaders,getMousePosInWebgl,glToCssPos, ScaleLinear};
+    //建立正弦型函数
+    function SinFn(a, omega, phi) {
+      return function(x) {
+        return a*Math.sin(omega*x+phi)
+      }
+    }
+export { initShaders,getMousePosInWebgl,glToCssPos, ScaleLinear, SinFn};
