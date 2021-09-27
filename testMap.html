@@ -9,28 +9,37 @@
 </head>
 
 <body>
-    <script>
-        const a = [
-            [
-                '对象属性1',
-                [
-                    ['时间1', '属性值'],
-                    ['时间2', '属性值'],
-                ],
-            ],
-            [
-                '对象属性2',
-                [
-                    ['时间1', '属性值'],
-                    ['时间2', '属性值'],
-                ],
-            ],
-        ];
-        for(const [key, fms] of a.entries()) {
-            const last = fms.length - 1;
-            console.log('a.entries()',a.entries())
-            console.log(key, fms)
-        }
+    <script type="module">
+        // let p = new Promise((reslove, reject) => {
+        //     reslove('success....')
+        // }) 
+        // console.log(p)
+        // let p2 = p.then(function() {
+
+        // })
+        // let p3 = p.then(function(){
+        //     return 'my Value'
+        // })
+        // console.log(p2)
+        // console.log(p3)
+        
+        // let res3 = p.then(function(){
+        //     return new Promise((reslove,reject) => {
+        //         reslove('some value')
+        //     })
+        // })
+        // console.log(res3)
+
+        // import('./jsm/Utils.js').then(res=> {
+        //     console.log('file',res)
+        // })
+
+            let set = new Set();
+            set.add(1),
+            set.add(333);
+            console.log(set)
+            set.delete(333)
+            console.log(set)
     </script>
 </body>
 
