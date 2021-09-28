@@ -54,15 +54,15 @@
         // 向attribute变量中写入多点
         // 顶点数据
         const source = new Float32Array([
-            0.2, 0.4, 0, 0, 0, 1, 1,
-            -0.1, 0.2, 0, 0, 1, 0, 1,
-            0.4, 0.2, 0, 1, 0, 0, 1,
+            0.2, 0.5, 0,     0, 0, 1, 1,  //定点位置数据  +  颜色数据
+            -0.1, 0.2, 0,    0, 1, 0, 1,
+            0.4, 0.2, 0,     1, 0, 0, 1,
         ]);
 
-        // 字节数
+        // 元素字节数
         const elementsBytes = source.BYTES_PER_ELEMENT;
-        const colorSize = 4;
-        const verticeSize = 3;
+        const colorSize = 4;  // 颜色系列
+        const verticeSize = 3; // 点位系列
         // 类目尺寸
         const categorySize = colorSize + verticeSize;
         // 类目字节数
@@ -83,7 +83,12 @@
 
         const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
         // 修改attribute 变量
-        gl.vertexAttribPointer(a_Position, verticeSize, gl.FLOAT, false,categoryBytes, verticeIndex);
+        gl.vertexAttribPointer(a_Position, 
+        verticeSize, //系列尺寸
+         gl.FLOAT, //数据类型浮点
+          false,
+          categoryBytes, //类目字节数
+           verticeIndex); //系列的字节索引
         // 赋能批处理
         gl.enableVertexAttribArray(a_Position);
 
