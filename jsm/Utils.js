@@ -72,4 +72,12 @@ function ScaleLinear(ax, ay, bx, by) {
         return a*Math.sin(omega*x+phi)
       }
     }
-export { initShaders,getMousePosInWebgl,glToCssPos, ScaleLinear, SinFn};
+    /* GetIndexInGrid 
+  在由一维数组建立的栅格矩阵中，基于行列获取元素的索引位置 
+*/
+function GetIndexInGrid(w, size) {
+  return function (x, y) {
+    return (y * w + x) * size
+  }
+}
+export { initShaders,getMousePosInWebgl,glToCssPos, ScaleLinear, SinFn, GetIndexInGrid};
