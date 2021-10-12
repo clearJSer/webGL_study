@@ -139,9 +139,10 @@
     //模型矩阵
     const modelMatrix = new Matrix4()
     const mx = new Matrix4().makeRotationX(0.02)
+    console.log('mx', mx)
     const my = new Matrix4().makeRotationY(0.02)
     const u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix')
-    gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements)
+    // gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements)
 
     /* 图像预处理 */
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
