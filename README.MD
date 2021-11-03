@@ -18,6 +18,9 @@ https://www.kaikeba.com/course/vip/255?channelCode=plat9iuq4vs8nq
 ### Q&A 
  - 裁剪空间是什么？裁剪了什么？
  - 08-08 视图矩阵 求c向量  为什么要转成右手坐标系，原来的webgl是什么坐标系
+ - 第二章12节
+   ![图片](./mdImage/Yrotation.png)
+ - 四元数 推送原理待完善
  #### 其他
   如果有疑问可以跟我联系，或者想看课程的朋友
 

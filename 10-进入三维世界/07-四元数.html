@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四元数</title>
+</head>
+
+<body>
+    <script type="module">
+        import { Group, Matrix4, Object3D, Scene, Vector3, Euler, Quaternion } from 'https://unpkg.com/three/build/three.module.js';
+        const quaternion = new Quaternion();
+        quaternion.setFromAxisAngle(new Vector3(3, 2, 1).normalize(), 2);
+        const P1 = new Vector3(1, 2, 3)
+        const P2 = P1.clone();
+        P2.applyQuaternion(quaternion)
+        console.log(P2)
+
+        const m = new Matrix4();
+        m.makeRotationFromQuaternion(quaternion);
+        P1.applyMatrix4(m)
+        console.log(P1)
+    </script>
+</body>
+
+</html>
