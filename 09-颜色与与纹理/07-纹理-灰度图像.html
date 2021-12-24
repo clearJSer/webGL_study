@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>纹理对象</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
+  <img src="" alt="" id="imgbox">
+  <script id="vertexShader" type="x-shader/x-vertex">
+    attribute vec4 a_Position;
+    attribute vec2 a_Pin;
+    varying vec2 v_Pin;
+    void main(){
+      gl_Position = a_Position;
+      v_Pin = a_Pin;
+    }
+  </script>
+  <script id="fragmentShader" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform sampler2D u_Sampler;
+    varying vec2 v_Pin;
+    void main(){
+        vec4 texture = texture2D(u_Sampler, v_Pin);
+        // float luminance = 0.299 * texture.r + 0.587 * texture.g + 0.114 * texture.b;
+        // gl_FragColor = vec4(luminance, luminance, luminance, 1.0);
+        gl_FragColor = vec4(texture.r, texture.g, texture.b, 1.0);
+    }
+  </script>
+  <script type="module">
+    const width = 200;
+    const height = 400;
+    import { initShaders } from '../jsm/Utils.js';
+    import flip from './jsm/flip.js'
+
+    const canvas = document.getElementById('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const gl = canvas.getContext('webgl');
+
+    const vsSource = document.getElementById('vertexShader').innerText;
+    const fsSource = document.getElementById('fragmentShader').innerText;
+    initShaders(gl, vsSource, fsSource);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+
+    //数据源
+    const source = new Float32Array([
+      -1, 1, 0, 1,
+      -1, -1, 0, 0.0,
+      1, 1, 1.0, 1,
+      1, -1, 1.0, 0.0,
+    ]);
+    const FSIZE = source.BYTES_PER_ELEMENT;
+    //元素字节数
+    const elementBytes = source.BYTES_PER_ELEMENT
+    //系列尺寸
+    const posSize = 2
+    const pinSize = 2
+    //类目尺寸
+    const categorySize = posSize + pinSize
+    //类目字节数
+    const categoryBytes = categorySize * elementBytes
+    //系列字节索引位置
+    const posByteIndex = 0
+    const pinByteIndex = posSize * elementBytes
+    //顶点总数
+    const sourceSize = source.length / categorySize
+
+
+    const sourceBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, sourceBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, source, gl.STATIC_DRAW);
+
+    const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+    gl.vertexAttribPointer(
+      a_Position,
+      posSize,
+      gl.FLOAT,
+      false,
+      categoryBytes,
+      posByteIndex
+    );
+    gl.enableVertexAttribArray(a_Position);
+
+    const a_Pin = gl.getAttribLocation(gl.program, 'a_Pin');
+    gl.vertexAttribPointer(
+      a_Pin,
+      pinSize,
+      gl.FLOAT,
+      false,
+      categoryBytes,
+      pinByteIndex
+    );
+    gl.enableVertexAttribArray(a_Pin);
+
+    /* 图像预处理 图像反转 */
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
+
+    /* 准备三个角色 */
+    // 激活纹理单元
+    gl.activeTexture(gl.TEXTURE0)
+    const texture = gl.createTexture()
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+    const image = new Image()
+    image.src = './images/dress.jpg'
+    image.onload = function () {
+      // 把图像装进纹理单元的纹理对象里
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGB,
+        gl.RGB,
+        gl.UNSIGNED_BYTE,
+        image
+      )
+
+      // 纹理对象设置响应的参数
+      gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_MIN_FILTER,
+        gl.LINEAR
+      )
+
+      // 在js中获取采样器对应的uniform片元，告诉片元着色器的采样器，纹理对象在哪个单元，之后采样器遍根据单元对象中的寻找纹理对象
+      const u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler')
+      gl.uniform1i(u_Sampler, 0)
+      render()
+    }
+
+
+
+
+    //渲染
+    function render() {
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, sourceSize);
+      var pixels = new Uint8Array(width * height * 4);
+      console.log('width,height', gl.drawingBufferWidth, gl.drawingBufferHeight);
+      gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      // 翻转Y轴
+      flip(pixels, width, height, 4);
+      console.log('pixels', pixels)
+      showImageByCanvas(pixels)
+      showImageByImg(pixels)
+    }
+
+    // canvas 展示图片
+    function showImageByCanvas(bytes) {
+      let imageData = new ImageData(new Uint8ClampedArray(bytes), width, height);
+      console.log('imageData', imageData);
+      let canvas2d = document.getElementById('canvas2');
+      canvas2d.width = width;
+      canvas2d.height = height;
+      let ctx = canvas2d.getContext('2d');
+      ctx.putImageData(imageData, 0, 0);
+      console.log(13123, canvas.toDataURL("image/png"));
+    }
+    // image展示图片
+    function showImageByImg(bytes) {
+      let binary = '';
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      const str12 = window.btoa(binary).replace(/=/g, "");
+      // // append it to your page
+      const image = document.getElementById('imgbox')
+      image.src = 'data:image/png;base64,' + str12;
+      // image.src = './images/dress.jpg';
+      
+      console.log(image)
+    }
+
+
+  </script>
+</body>
+
+</html>
