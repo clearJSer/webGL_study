@@ -11,4 +11,5 @@ const param = {
 for (let a of [{a:1},{b:2}]) {
     console.log(a.key())
 }
-// console.log(Object.entries(param))
+console.log(Object.entries(param))
+console.log(1111)
