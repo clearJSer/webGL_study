@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="module">
+        import { Group, Matrix4, Object3D, Scene, Vector3, Matrix3,Vector4 } from 'https://unpkg.com/three/build/three.module.js';
+        var A = new Matrix4();
+        A.set(
+            -0.22171525057515837, -1.2922709694767058, 0.0, 31.809635784476995,
+            1.2851335879399437, -0.2285749621142067, 0.0, -36.67411201354116,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        )
+        //0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15
+            // .invert();
+        const v = new Vector4(1,2,3,4)
+        const v2 = v.applyMatrix4(A)
+        console.log('V2',v);
+        // console.log(aInvert);
+        var B = new Matrix4();
+        B.set(16, 15, 14, 13,
+            12, 11, 10, 9,
+            8, 7, 6, 5,
+            4, 3, 2, 1);
+        console.log(B, B.toArray());
+
+        var C = new Matrix4();
+        C.multiplyMatrices(B, A);
+        B.multiply(A)
+        console.log('C',C);
+        console.log(B)
+
+        const D = new Matrix4();
+        D.fromArray([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
+        console.log(
+            'd',D
+        )
+
+    </script>
+</body>
+
+</html>

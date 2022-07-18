@@ -80,4 +80,12 @@ function GetIndexInGrid(w, size) {
     return (y * w + x) * size
   }
 }
-export { initShaders,getMousePosInWebgl,glToCssPos, ScaleLinear, SinFn, GetIndexInGrid};
+// 对Image加载事件封装
+function imgPromise(img) {
+  return new Promise((reslove) => {
+    img.onload = function() {
+      reslove(img)
+    }
+  })
+}
+export { initShaders,getMousePosInWebgl,glToCssPos, ScaleLinear, SinFn, GetIndexInGrid, imgPromise};
